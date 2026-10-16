@@ -36,7 +36,7 @@ def login():
         cursor.close()
 
         # 3. If user exists AND the password matches the hash, issue a token
-        if user and check_password_hash(user['password_hash'], password):
+        if user['password_hash']==password:
             
             # THE FIX: We must pass a STRING here, not a dictionary!
             access_token = create_access_token(identity=str(user['username']))
