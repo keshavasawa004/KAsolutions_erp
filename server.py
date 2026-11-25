@@ -12,7 +12,22 @@ import analytics_dao
 import os
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(
+    app,
+    resources={r"/*": {"origins": ["https://kasolutions-erp-1.onrender.com", "*"]}},
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "OPTIONS"]
+)
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = jsonify({"status": "ok"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        return response, 200
 
 # --- JWT Security Configuration ---
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'local_dev_key_only')
