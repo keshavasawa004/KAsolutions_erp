@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KA Solutions - Admin POS & ERP</title>
+    <title>KA Solutions - POS & ERP</title>
     <!-- Tailwind CSS with Dark Mode via class -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -19,7 +19,7 @@
     <!-- ========================================== -->
     <!-- 1. SECURE LOGIN OVERLAY                    -->
     <!-- ========================================== -->
-    <div id="loginOverlay" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center">
+    <div id="loginOverlay" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96 border border-gray-200 dark:border-gray-700">
             <div class="text-center mb-6">
                 <h1 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight">KA Solutions</h1>
@@ -44,13 +44,35 @@
             <p id="loginError" class="text-red-500 mt-4 text-center hidden text-sm font-semibold">
                 Invalid username or password.
             </p>
+
+            <!-- Demo Login Credentials Box -->
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-gray-700/60 border border-blue-200 dark:border-gray-600 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+                        Demo Login Credentials
+                    </h3>
+                    <button type="button" onclick="fillDemoCredentials()"
+                            class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2.5 py-1 rounded transition">
+                        Auto-Fill
+                    </button>
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-200">
+                    <strong>Username:</strong> <span class="font-mono">demo</span>
+                </p>
+                <p class="text-sm text-gray-700 dark:text-gray-200 mt-1">
+                    <strong>Password:</strong> <span class="font-mono">adminpass123</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                    Public demo account – read-only inventory &amp; expenses.
+                </p>
+            </div>
         </div>
     </div>
 
     <!-- ========================================== -->
     <!-- 2. EDIT PRODUCT MODAL (ADMIN ONLY)         -->
     <!-- ========================================== -->
-    <div id="editProductModal" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden flex items-center justify-center">
+    <div id="editProductModal" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl w-96 border border-gray-200 dark:border-gray-700">
             <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Edit / Restock Product</h3>
             <input type="hidden" id="editProductId">
@@ -102,7 +124,7 @@
                 <button onclick="switchTab('posTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">🛒 Point of Sale</button>
                 <button onclick="switchTab('stockTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📦 Inventory</button>
                 <button onclick="switchTab('ordersTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">🧾 Order History</button>
-                <button onclick="switchTab('insightsTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📈 Insights & Profit</button>
+                <button onclick="switchTab('insightsTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📈 Insights &amp; Profit</button>
                 <button onclick="switchTab('expensesTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">💸 Expenses</button>
             </nav>
             <div class="p-4 border-t border-gray-800">
@@ -198,7 +220,7 @@
                         <thead class="bg-gray-800 text-white">
                             <tr>
                                 <th class="p-4">Order ID</th>
-                                <th class="p-4">Date & Time</th>
+                                <th class="p-4">Date &amp; Time</th>
                                 <th class="p-4">Customer</th>
                                 <th class="p-4">Total Amount</th>
                             </tr>
@@ -235,7 +257,7 @@
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
                     <!-- Daily Bar Chart -->
                     <div class="xl:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">7-Day Profit & Cost Trend</h3>
+                        <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">7-Day Profit &amp; Cost Trend</h3>
                         <div class="relative h-64">
                             <canvas id="profitChart"></canvas>
                         </div>
@@ -320,12 +342,10 @@
                 ? "text-xs font-bold px-2 py-0.5 rounded bg-green-600 text-white"
                 : "text-xs font-bold px-2 py-0.5 rounded bg-yellow-500 text-black";
 
-            // Toggle Admin Add Forms
             document.getElementById('adminAddProductBox').style.display = admin ? 'block' : 'none';
             document.getElementById('adminAddExpenseBox').style.display = admin ? 'block' : 'none';
             document.getElementById('readOnlyStockBadge').style.display = admin ? 'none' : 'inline-block';
 
-            // Toggle Admin Table Columns
             document.querySelectorAll('.admin-only-col').forEach(el => {
                 el.style.display = admin ? 'table-cell' : 'none';
             });
@@ -363,6 +383,11 @@
             }
         };
 
+        function fillDemoCredentials() {
+            document.getElementById('usernameInput').value = 'demo';
+            document.getElementById('passwordInput').value = 'adminpass123';
+        }
+
         function attemptLogin() {
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value;
@@ -370,7 +395,78 @@
             btn.innerText = "Authenticating...";
             btn.disabled = true;
 
-            fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: user, password: pass }) }) .then(res => res.json()) .then(data => { btn.innerText = "Secure Login"; btn.disabled = false; if (data.token) { localStorage.setItem('jwt_token', data.token); localStorage.setItem('user_role', data.role); document.getElementById('loginError').style.display = 'none'; document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('mainDashboard').style.display = 'flex'; applyRolePermissions(); switchTab('posTab'); } else { document.getElementById('loginError').style.display = 'block'; } }) .catch(err => { btn.innerText = "Secure Login"; btn.disabled = false; console.error(err); alert("Server connection failed. Backend may be waking up."); }); }  function logout() { localStorage.removeItem('jwt_token'); localStorage.removeItem('user_role'); document.getElementById('loginOverlay').style.display = 'flex'; document.getElementById('mainDashboard').style.display = 'none'; document.getElementById('usernameInput').value = ''; document.getElementById('passwordInput').value = ''; }  function getAuthHeaders() { return { 'Authorization': 'Bearer ' + localStorage.getItem('jwt_token') }; }  function handleApiError(response) { if (!response.ok) { return response.json().then(errData => { if (response.status === 401 \vert{}\vert{} response.status === 422) { const msg = errData.msg \vert{}\vert{} errData.error \vert{}\vert{} "Session expired"; alert("Security alert: " + msg + ".\nLogging you out."); logout(); } throw errData; }).catch(err => { throw err; }); } return response.json(); }  function switchTab(tabId) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden')); document.getElementById(tabId).classList.remove('hidden');  if (tabId === 'posTab' \vert{}\vert{} tabId === 'stockTab') loadProducts(); if (tabId === 'ordersTab') loadOrders(); if (tabId === 'insightsTab') loadAnalytics(); if (tabId === 'expensesTab') loadExpensesTable(); }  function loadProducts() { fetch(`${API_URL}/getProducts`, {
+            fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.innerText = "Secure Login";
+                btn.disabled = false;
+                if (data.token) {
+                    localStorage.setItem('jwt_token', data.token);
+                    localStorage.setItem('user_role', data.role);
+                    document.getElementById('loginError').style.display = 'none';
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainDashboard').style.display = 'flex';
+                    applyRolePermissions();
+                    switchTab('posTab');
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            })
+            .catch(err => {
+                btn.innerText = "Secure Login";
+                btn.disabled = false;
+                console.error(err);
+                alert("Server connection failed. Backend may be waking up.");
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('jwt_token');
+            localStorage.removeItem('user_role');
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        function getAuthHeaders() {
+            return {
+                'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
+            };
+        }
+
+        function handleApiError(response) {
+            if (!response.ok) {
+                return response.json().then(errData => {
+                    if (response.status === 401 || response.status === 422) {
+                        const msg = errData.msg || errData.error || "Session expired";
+                        alert("Security alert: " + msg + ".\nLogging you out.");
+                        logout();
+                    }
+                    throw errData;
+                }).catch(err => {
+                    throw err;
+                });
+            }
+            return response.json();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            if (tabId === 'posTab' || tabId === 'stockTab') loadProducts();
+            if (tabId === 'ordersTab') loadOrders();
+            if (tabId === 'insightsTab') loadAnalytics();
+            if (tabId === 'expensesTab') loadExpensesTable();
+        }
+
+        function loadProducts() {
+            fetch(`${API_URL}/getProducts`, {
                 headers: getAuthHeaders()
             })
             .then(handleApiError)
@@ -397,7 +493,7 @@
                                 data-price="${price}"
                                 data-stock="${p.stock_quantity}"
                                 data-name="${p.name}">
-                                ${p.name} (₹${price.toFixed(2)}) - Stock:${p.stock_quantity}
+                                ${p.name} (₹${price.toFixed(2)}) - Stock: ${p.stock_quantity}
                             </option>`;
                     }
 
@@ -419,7 +515,8 @@
                             <td class="p-4">₹${cost.toFixed(2)}</td>
                             <td class="p-4 text-green-600 font-bold">₹${price.toFixed(2)}</td>
                             <td class="p-4 text-xs text-gray-500">${margin}%</td>
-                            <td class="p-4 ${lowStockClass}">${p.stock_quantity} ${p.uom_name}</td>${adminActionsHtml}
+                            <td class="p-4 ${lowStockClass}">${p.stock_quantity} ${p.uom_name}</td>
+                            ${adminActionsHtml}
                         </tr>`;
                 });
             })
@@ -428,7 +525,6 @@
             });
         }
 
-        // --- ADMIN: EDIT / RESTOCK MODAL FUNCTIONS ---
         function openEditModal(productId) {
             const product = currentProducts.find(p => p.product_id == productId);
             if (!product) return;
@@ -478,7 +574,40 @@
             const formData = new FormData();
             formData.append('product_id', id);
 
-            fetch(`${API_URL}/deleteProduct`, { method: 'POST', headers: getAuthHeaders(), body: formData }) .then(handleApiError) .then(() => loadProducts()) .catch(err => { const errorMsg = err.error \vert{}\vert{} err.msg \vert{}\vert{} "Unauthorized or server error."; alert("Failed to delete product: " + errorMsg); }); }  function insertProduct() { const name = document.getElementById('newProductName').value.trim(); const cost = document.getElementById('newProductCost').value; const price = document.getElementById('newProductPrice').value;  if (!name \vert{}\vert{} !cost \vert{}\vert{} !price) { return alert("Product Name, Cost Price, and Selling Price are required."); }  const data = { product_name: name, uom_id: document.getElementById('newProductUom').value, cost_per_unit: parseFloat(cost), price_per_unit: parseFloat(price), stock_quantity: parseFloat(document.getElementById('newProductQty').value) \vert{}\vert{} 0 };  const formData = new FormData(); formData.append('data', JSON.stringify(data));  fetch(`${API_URL}/insertProduct`, {
+            fetch(`${API_URL}/deleteProduct`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: formData
+            })
+            .then(handleApiError)
+            .then(() => loadProducts())
+            .catch(err => {
+                const errorMsg = err.error || err.msg || "Unauthorized or server error.";
+                alert("Failed to delete product: " + errorMsg);
+            });
+        }
+
+        function insertProduct() {
+            const name = document.getElementById('newProductName').value.trim();
+            const cost = document.getElementById('newProductCost').value;
+            const price = document.getElementById('newProductPrice').value;
+
+            if (!name || !cost || !price) {
+                return alert("Product Name, Cost Price, and Selling Price are required.");
+            }
+
+            const data = {
+                product_name: name,
+                uom_id: document.getElementById('newProductUom').value,
+                cost_per_unit: parseFloat(cost),
+                price_per_unit: parseFloat(price),
+                stock_quantity: parseFloat(document.getElementById('newProductQty').value) || 0
+            };
+
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(data));
+
+            fetch(`${API_URL}/insertProduct`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: formData
@@ -545,4 +674,259 @@
                     <tr class="border-b dark:border-gray-700">
                         <td class="p-3">${item.name}</td>
                         <td class="p-3">${item.quantity}</td>
-                        <td class="p
+                        <td class="p-3">₹${(item.total_price / item.quantity).toFixed(2)}</td>
+                        <td class="p-3 font-bold text-gray-800 dark:text-gray-100">₹${item.total_price.toFixed(2)}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 font-bold" title="Remove Item">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('cartTotal').innerText = grandTotal.toFixed(2);
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert("Cart is empty!");
+            const customerName = document.getElementById('customerName').value || 'Walk-in';
+            const grandTotal = cart.reduce((sum, item) => sum + item.total_price, 0);
+
+            const orderData = {
+                customer_name: customerName,
+                grand_total: grandTotal,
+                order_details: cart
+            };
+
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(orderData));
+
+            fetch(`${API_URL}/insertOrder`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: formData
+            })
+            .then(handleApiError)
+            .then(data => {
+                if (data.status === 'success' || data.order_id) {
+                    alert('Order processed successfully!');
+                    cart = [];
+                    renderCart();
+                    document.getElementById('customerName').value = '';
+                    loadProducts();
+                } else {
+                    alert('Error: ' + (data.error || 'Checkout failed'));
+                }
+            })
+            .catch(err => {
+                alert('Checkout error: ' + (err.error || err.msg || 'Server error'));
+            });
+        }
+
+        function loadOrders() {
+            fetch(`${API_URL}/getAllOrders`, {
+                headers: getAuthHeaders()
+            })
+            .then(handleApiError)
+            .then(data => {
+                if (!Array.isArray(data)) throw new Error("Invalid orders response");
+                const tbody = document.getElementById('ordersTableBody');
+                tbody.innerHTML = '';
+
+                data.forEach(o => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-750">
+                            <td class="p-4 font-bold">#${o.order_id}</td>
+                            <td class="p-4">${o.datetime.substring(0, 16)}</td>
+                            <td class="p-4">${o.customer_name}</td>
+                            <td class="p-4 font-bold text-green-600">
+                                ₹${parseFloat(o.total).toFixed(2)}
+                            </td>
+                        </tr>`;
+                });
+            })
+            .catch(err => console.error("Error loading orders:", err));
+        }
+
+        function submitExpense() {
+            const date = document.getElementById('expenseDate').value;
+            const category = document.getElementById('expenseCategory').value;
+            const amount = document.getElementById('expenseAmount').value;
+
+            if (!date || !category || !amount) {
+                return alert("Please fill out all expense fields.");
+            }
+
+            fetch(`${API_URL}/addExpense`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
+                body: JSON.stringify({ date: date, category: category, amount: parseFloat(amount) })
+            })
+            .then(handleApiError)
+            .then(() => {
+                alert("Expense logged successfully!");
+                document.getElementById('expenseDate').value = '';
+                document.getElementById('expenseCategory').value = '';
+                document.getElementById('expenseAmount').value = '';
+                loadExpensesTable();
+            })
+            .catch(err => {
+                const errorMsg = err.error || err.msg || "Admin privileges required.";
+                alert("Failed to submit expense: " + errorMsg);
+            });
+        }
+
+        function deleteExpense(id) {
+            if (!confirm("Are you sure you want to delete this expense?")) return;
+            const formData = new FormData();
+            formData.append('expense_id', id);
+
+            fetch(`${API_URL}/deleteExpense`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: formData
+            })
+            .then(handleApiError)
+            .then(() => loadExpensesTable())
+            .catch(err => {
+                const errorMsg = err.error || err.msg || "Admin privileges required.";
+                alert("Failed to delete expense: " + errorMsg);
+            });
+        }
+
+        function loadExpensesTable() {
+            const admin = isAdmin();
+            fetch(`${API_URL}/getExpenses`, {
+                headers: getAuthHeaders()
+            })
+            .then(handleApiError)
+            .then(data => {
+                const tbody = document.getElementById('expensesTableBody');
+                tbody.innerHTML = '';
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">No expenses recorded yet.</td></tr>';
+                    return;
+                }
+                data.forEach(e => {
+                    const actionCell = admin ? `
+                        <td class="p-4 text-center">
+                            <button onclick="deleteExpense(${e.expense_id})" class="text-red-500 font-bold hover:text-red-700">Delete</button>
+                        </td>` : '';
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-750">
+                            <td class="p-4 font-bold text-gray-700 dark:text-gray-300">#${e.expense_id}</td>
+                            <td class="p-4">${e.expense_date}</td>
+                            <td class="p-4 font-medium">${e.expense_category}</td>
+                            <td class="p-4 font-bold text-red-500">₹${parseFloat(e.amount).toFixed(2)}</td>
+                            ${actionCell}
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => {
+                const tbody = document.getElementById('expensesTableBody');
+                const errorMsg = err.error || err.msg || "Could not load table";
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500 font-bold">Error: ${errorMsg}</td></tr>`;
+            });
+        }
+
+        function loadAnalytics() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+
+            fetch(`${API_URL}/getAnalytics`, {
+                headers: getAuthHeaders()
+            })
+            .then(handleApiError)
+            .then(data => {
+                if (data.kpis) {
+                    document.getElementById('kpiRevenue').innerText = parseFloat(data.kpis.total_revenue).toFixed(2);
+                    document.getElementById('kpiCost').innerText = parseFloat(data.kpis.total_cost).toFixed(2);
+                    document.getElementById('kpiExpenses').innerText = parseFloat(data.kpis.total_expenses).toFixed(2);
+                    document.getElementById('kpiProfit').innerText = parseFloat(data.kpis.net_profit).toFixed(2);
+                    
+                    const ctxPie = document.getElementById('revenuePieChart').getContext('2d');
+                    if (pieChartInstance) pieChartInstance.destroy();
+                    
+                    const visualNetProfit = Math.max(0, parseFloat(data.kpis.net_profit));
+
+                    pieChartInstance = new Chart(ctxPie, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Cost of Goods', 'Expenses', 'Net Profit'],
+                            datasets: [{
+                                data: [
+                                    parseFloat(data.kpis.total_cost),
+                                    parseFloat(data.kpis.total_expenses),
+                                    visualNetProfit
+                                ],
+                                backgroundColor: [
+                                    'rgba(249, 115, 22, 0.8)', 
+                                    'rgba(239, 68, 68, 0.8)',  
+                                    'rgba(34, 197, 94, 0.9)'   
+                                ],
+                                borderColor: isDark ? '#1f2937' : '#ffffff',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: textColor }
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(err => console.error("Error loading analytics KPIs:", err));
+
+            fetch(`${API_URL}/getDailyProfit`, {
+                headers: getAuthHeaders()
+            })
+            .then(handleApiError)
+            .then(data => {
+                const labels = data.map(d => d.order_date).reverse();
+                const revenueData = data.map(d => d.daily_revenue).reverse();
+                const costData = data.map(d => d.daily_cost).reverse();
+                const expenseData = data.map(d => d.daily_expense).reverse();
+                const netProfitData = data.map(d => d.net_profit).reverse();
+
+                const ctx = document.getElementById('profitChart').getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+
+                chartInstance = new Chart(ctx, {
+                    type: 'bar', 
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Sales Revenue (₹)', data: revenueData, backgroundColor: 'rgba(59, 130, 246, 0.8)' },
+                            { label: 'Cost of Goods (₹)', data: costData, backgroundColor: 'rgba(249, 115, 22, 0.8)' },
+                            { label: 'Expenses (₹)', data: expenseData, backgroundColor: 'rgba(239, 68, 68, 0.8)' },
+                            { label: 'Net Profit (₹)', data: netProfitData, backgroundColor: 'rgba(34, 197, 94, 0.9)' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top', labels: { color: textColor } }
+                        },
+                        scales: {
+                            x: { grid: { color: gridColor }, ticks: { color: textColor } },
+                            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
+                        }
+                    }
+                });
+            })
+            .catch(err => console.error("Error loading daily profit chart:", err));
+        }
+    </script>
+</body>
+</html>
