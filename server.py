@@ -89,7 +89,7 @@ def delete_product():
         return response
     finally:
         connection.close()
-
+        
 @app.route('/getUOM', methods=['GET'])
 def get_uom():
     connection = get_sql_connection()
