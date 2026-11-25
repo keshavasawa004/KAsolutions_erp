@@ -65,7 +65,9 @@ def login():
         connection.close()
 
 
+
 @app.route('/getProducts', methods=['GET'])
+@jwt_required()
 def get_products():
     connection = get_sql_connection()
     try:
@@ -75,6 +77,7 @@ def get_products():
         return response
     finally:
         connection.close()
+
 
 # NOTICE THE @jwt_required() DECORATOR HERE!
 # This endpoint is now locked. It will reject any request missing a valid token.
@@ -90,7 +93,9 @@ def delete_product():
     finally:
         connection.close()
         
+
 @app.route('/getUOM', methods=['GET'])
+@jwt_required()
 def get_uom():
     connection = get_sql_connection()
     try:
@@ -100,6 +105,7 @@ def get_uom():
         return response
     finally:
         connection.close()
+
 
 
 @app.route('/insertProduct', methods=['POST'])
@@ -164,7 +170,9 @@ def insert_order():
         connection.close()
 
 
+
 @app.route('/getAllOrders', methods=['GET'])
+@jwt_required()
 def get_all_orders():
     connection = get_sql_connection()
     try:
@@ -175,7 +183,10 @@ def get_all_orders():
     finally:
         connection.close()
 
+
+
 @app.route('/getAnalytics', methods=['GET'])
+@jwt_required()
 def get_analytics():
     connection = get_sql_connection()
     try:
@@ -186,7 +197,9 @@ def get_analytics():
     finally:
         connection.close()
 
+
 @app.route('/getDailyProfit', methods=['GET'])
+@jwt_required()
 def get_daily_profit():
     connection = get_sql_connection()
     try:
@@ -196,6 +209,7 @@ def get_daily_profit():
         return response
     finally:
         connection.close()
+
 
 @app.route('/getExpenses', methods=['GET'])
 @jwt_required()
