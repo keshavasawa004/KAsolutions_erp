@@ -13,21 +13,13 @@ import os
 
 app = Flask(__name__)
 
+# Explicitly allow requests & headers from your Render frontend
 CORS(
     app,
-    resources={r"/*": {"origins": ["https://kasolutions-erp-1.onrender.com", "*"]}},
+    resources={r"/*": {"origins": "*"}},
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "OPTIONS"]
 )
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = jsonify({"status": "ok"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-        return response, 200
 
 # --- JWT Security Configuration ---
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'local_dev_key_only')
@@ -35,13 +27,38 @@ jwt = JWTManager(app)
 # ----------------------------------
 
 
+@app.before_request
+def handle_preflight():
+    """Respond 200 OK immediately to browser CORS preflight OPTIONS checks."""
+    if request.method == "OPTIONS":
+        response = jsonify({"status": "ok"})
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        return response, 200
+
+
+@app.after_request
+def add_cors_headers(response):
+    """Ensure every response—including 401/403/500 errors—carries CORS headers."""
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
+
+
 def check_is_admin(connection, username):
-    """Helper to verify if the authenticated user has admin privileges."""
+    """Case-insensitive check for admin role in database."""
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT role FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
     cursor.close()
-    return bool(user and user.get('role') == 'admin')
+    return bool(user and str(user.get('role', '')).strip().lower() == 'admin')
+
+
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "KA Solutions ERP Backend Live"}), 200
 
 
 @app.route('/login', methods=['POST'])
@@ -101,7 +118,6 @@ def insert_product():
         connection.close()
 
 
-# NEW: Route for Admin Edit / Restock Modal
 @app.route('/updateProduct', methods=['POST'])
 @jwt_required()
 def update_product():
@@ -120,7 +136,6 @@ def update_product():
         connection.close()
 
 
-# FIXED: Now restricted to Admin role only
 @app.route('/deleteProduct', methods=['POST'])
 @jwt_required()
 def delete_product():
@@ -213,3 +228,50 @@ def get_expenses():
         return jsonify({'error': str(err), 'status': 'failed'}), 400
     finally:
         connection.close()
+
+
+@app.route('/addExpense', methods=['POST'])
+@jwt_required()
+def add_expense():
+    current_user = get_jwt_identity()
+    connection = get_sql_connection()
+    try:
+        if not check_is_admin(connection, current_user):
+            return jsonify({'error': 'Admin access required'}), 403
+
+        request_payload = request.get_json()
+        analytics_dao.insert_expense(connection, request_payload)
+        return jsonify({'status': 'success'})
+    except Exception as err:
+        return jsonify({
+            'error': 'Unable to add expense: ' + str(err),
+            'status': 'failed'
+        }), 400
+    finally:
+        connection.close()
+
+
+@app.route('/deleteExpense', methods=['POST'])
+@jwt_required()
+def delete_expense():
+    current_user = get_jwt_identity()
+    connection = get_sql_connection()
+    try:
+        if not check_is_admin(connection, current_user):
+            return jsonify({'error': 'Admin access required'}), 403
+
+        expense_id = request.form['expense_id']
+        analytics_dao.delete_expense(connection, expense_id)
+        return jsonify({'status': 'success'})
+    except Exception as err:
+        return jsonify({
+            'error': 'Unable to delete expense: ' + str(err),
+            'status': 'failed'
+        }), 400
+    finally:
+        connection.close()
+
+
+if __name__ == '__main__':
+    print("Starting Python Flask Server For Grocery Store Application...")
+    app.run(port=5000)
