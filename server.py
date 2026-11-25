@@ -190,3 +190,11 @@ def get_daily_profit():
 @app.route('/getExpenses', methods=['GET'])
 @jwt_required()
 def get_expenses():
+    connection = get_sql_connection()
+    try:
+        expenses = analytics_dao.get_all_expenses(connection)
+        return jsonify(expenses)
+    except Exception as err:
+        return jsonify({'error': str(err), 'status': 'failed'}), 400
+    finally:
+        connection.close()
