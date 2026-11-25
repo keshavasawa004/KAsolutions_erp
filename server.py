@@ -20,36 +20,50 @@ app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'local_dev_key_only'
 jwt = JWTManager(app)
 # ----------------------------------
 
+
 @app.route('/login', methods=['POST'])
 def login():
-    # 1. Grab the username and password from the frontend JSON request
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     username = data.get('username')
     password = data.get('password')
- 
+
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
+
     connection = get_sql_connection()
+
     try:
-        # 2. Look up the user in the database
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+
+        cursor.execute(
+            "SELECT * FROM users WHERE username = %s",
+            (username,)
+        )
         user = cursor.fetchone()
         cursor.close()
 
-        # 3. If user exists AND the password matches the hash, issue a token
-        if user['password_hash']==password:
-            
-            # THE FIX: We must pass a STRING here, not a dictionary!
-            access_token = create_access_token(identity=str(user['username']))
-            
-            response = jsonify({'token': access_token, 'role': user['role']})
+        if user and check_password_hash(user['password_hash'], password):
+
+            access_token = create_access_token(
+                identity=str(user['username'])
+            )
+
+            response = jsonify({
+                'token': access_token,
+                'role': user['role']
+            })
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response, 200
-        else:
-            response = jsonify({'error': 'Invalid username or password'})
-            response.headers.add('Access-Control-Allow-Origin', '*')
-            return response, 401
+
+        response = jsonify({
+            'error': 'Invalid username or password'
+        })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 401
+
     finally:
         connection.close()
+
 
 @app.route('/getProducts', methods=['GET'])
 def get_products():
