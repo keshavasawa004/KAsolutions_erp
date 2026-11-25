@@ -14,45 +14,46 @@ def get_all_products(connection):
 
 def insert_new_product(connection, product):
     cursor = connection.cursor()
-    # Read the quantity from the frontend, default to 0 if missing
-    qty = product.get('stock_quantity', 0) 
-    
-    # FIX 1: Changed 'name' to 'product_name' to match the database column
-    query = ("INSERT INTO products "
-             "(product_name, uom_id, price_per_unit, cost_per_unit, stock_quantity) "
-             "VALUES (%s, %s, %s, %s, %s)")
-    data = (product['product_name'], product['uom_id'], product['price_per_unit'], product['cost_per_unit'], qty)
+    qty = float(product.get('stock_quantity') or 0)
+    uom_id = int(product['uom_id'])
+    price = float(product['price_per_unit'])
+    cost = float(product['cost_per_unit'])
+
+    query = """
+        INSERT INTO products 
+        (product_name, uom_id, price_per_unit, cost_per_unit, stock_quantity) 
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    data = (product['product_name'].strip(), uom_id, price, cost, qty)
     
     cursor.execute(query, data)
     connection.commit()
-    return cursor.lastrowid
+    last_id = cursor.lastrowid
+    cursor.close()
+    return last_id
 
 def delete_product(connection, product_id):
     cursor = connection.cursor()
-    
-    # FIX 2: Delete from order_details first to prevent Foreign Key constraint crashes
     cursor.execute("DELETE FROM order_details WHERE product_id = %s", (product_id,))
-    
-    # Now it is safe to delete the product
-    query = "DELETE FROM products WHERE product_id = %s"
-    cursor.execute(query, (product_id,))
+    cursor.execute("DELETE FROM products WHERE product_id = %s", (product_id,))
     connection.commit()
     cursor.close()
-    return cursor.lastrowid
+    return product_id
 
 def update_product(connection, product):
     cursor = connection.cursor()
+    # FIXED: Changed 'name' to 'product_name' to match your MySQL schema
     query = """
         UPDATE products 
-        SET name = %s, cost_per_unit = %s, price_per_unit = %s, stock_quantity = %s
+        SET product_name = %s, cost_per_unit = %s, price_per_unit = %s, stock_quantity = %s
         WHERE product_id = %s
     """
     data = (
-        product['product_name'],
-        product['cost_per_unit'],
-        product['price_per_unit'],
-        product['stock_quantity'],
-        product['product_id']
+        product['product_name'].strip(),
+        float(product['cost_per_unit']),
+        float(product['price_per_unit']),
+        float(product['stock_quantity']),
+        int(product['product_id'])
     )
     cursor.execute(query, data)
     connection.commit()
