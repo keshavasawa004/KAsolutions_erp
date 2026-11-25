@@ -133,21 +133,36 @@ def insert_product():
         connection.close()
 
 
+
 @app.route('/insertOrder', methods=['POST'])
+@jwt_required()
 def insert_order():
     connection = get_sql_connection()
     try:
         request_payload = json.loads(request.form['data'])
-        order_id = orders_dao.insert_order(connection, request_payload)
-        response = jsonify({'order_id': order_id, 'status': 'success'})
+
+        order_id = orders_dao.insert_order(
+            connection, request_payload
+        )
+
+        response = jsonify({
+            'order_id': order_id,
+            'status': 'success'
+        })
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
+
     except Exception as err:
-        response = jsonify({'error': str(err), 'status': 'failed'})
+        response = jsonify({
+            'error': 'Unable to create order',
+            'status': 'failed'
+        })
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response, 400
+
     finally:
         connection.close()
+
 
 @app.route('/getAllOrders', methods=['GET'])
 def get_all_orders():
@@ -198,39 +213,76 @@ def get_expenses():
     finally:
         connection.close()
 
+
 @app.route('/addExpense', methods=['POST'])
 @jwt_required()
 def add_expense():
+    current_user = get_jwt_identity()
     connection = get_sql_connection()
+
     try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT role FROM users WHERE username = %s",
+            (current_user,)
+        )
+        user = cursor.fetchone()
+        cursor.close()
+
+        if not user or user['role'] != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+
         request_payload = request.get_json()
         analytics_dao.insert_expense(connection, request_payload)
+
         response = jsonify({'status': 'success'})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-    except Exception as err:
-        # This will catch missing tables or database errors and send them to the frontend
-        response = jsonify({'error': str(err), 'status': 'failed'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response, 400
+
+    except Exception:
+        return jsonify({
+            'error': 'Unable to add expense',
+            'status': 'failed'
+        }), 400
+
     finally:
         connection.close()
+
+
 @app.route('/deleteExpense', methods=['POST'])
 @jwt_required()
 def delete_expense():
+    current_user = get_jwt_identity()
     connection = get_sql_connection()
+
     try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT role FROM users WHERE username = %s",
+            (current_user,)
+        )
+        user = cursor.fetchone()
+        cursor.close()
+
+        if not user or user['role'] != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+
         expense_id = request.form['expense_id']
         analytics_dao.delete_expense(connection, expense_id)
+
         response = jsonify({'status': 'success'})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-    except Exception as err:
-        response = jsonify({'error': str(err), 'status': 'failed'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response, 400
+
+    except Exception:
+        return jsonify({
+            'error': 'Unable to delete expense',
+            'status': 'failed'
+        }), 400
+
     finally:
         connection.close()
+
         
 if __name__ == '__main__':
     print("Starting Python Flask Server For Grocery Store Application...")
