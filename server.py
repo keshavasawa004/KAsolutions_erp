@@ -101,17 +101,37 @@ def get_uom():
     finally:
         connection.close()
 
+
 @app.route('/insertProduct', methods=['POST'])
+@jwt_required()
 def insert_product():
+    current_user = get_jwt_identity()
+
     connection = get_sql_connection()
     try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT role FROM users WHERE username = %s",
+            (current_user,)
+        )
+        user = cursor.fetchone()
+        cursor.close()
+
+        if not user or user['role'] != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+
         request_payload = json.loads(request.form['data'])
-        product_id = products_dao.insert_new_product(connection, request_payload)
+        product_id = products_dao.insert_new_product(
+            connection, request_payload
+        )
+
         response = jsonify({'product_id': product_id})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
+
     finally:
         connection.close()
+
 
 @app.route('/insertOrder', methods=['POST'])
 def insert_order():
