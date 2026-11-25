@@ -39,3 +39,22 @@ def delete_product(connection, product_id):
     connection.commit()
     cursor.close()
     return cursor.lastrowid
+
+def update_product(connection, product):
+    cursor = connection.cursor()
+    query = """
+        UPDATE products 
+        SET name = %s, cost_per_unit = %s, price_per_unit = %s, stock_quantity = %s
+        WHERE product_id = %s
+    """
+    data = (
+        product['product_name'],
+        product['cost_per_unit'],
+        product['price_per_unit'],
+        product['stock_quantity'],
+        product['product_id']
+    )
+    cursor.execute(query, data)
+    connection.commit()
+    cursor.close()
+    return product['product_id']
