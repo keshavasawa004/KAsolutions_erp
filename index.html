@@ -19,85 +19,68 @@
     <!-- ========================================== -->
     <!-- 1. SECURE LOGIN OVERLAY                    -->
     <!-- ========================================== -->
-    <div id="loginOverlay" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96 border border-gray-200 dark:border-gray-700">
-            <div class="text-center mb-6">
-                <h1 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight">KA Solutions</h1>
-                <h2 class="text-gray-500 dark:text-gray-400 text-sm mt-1">Enterprise Store Management</h2>
-            </div>
+    
+<div id="loginOverlay" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96 border border-gray-200 dark:border-gray-700">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight">KA Solutions</h1>
+            <h2 class="text-gray-500 dark:text-gray-400 text-sm mt-1">Store Management System</h2>
+        </div>
 
-            <form onsubmit="event.preventDefault(); attemptLogin();">
-                <input type="text" id="usernameInput" placeholder="Username" required
-                       autocomplete="username"
-                       class="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="usernameInput" placeholder="Username"
+               autocomplete="username"
+               class="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                <input type="password" id="passwordInput" placeholder="Password" required
-                       autocomplete="current-password"
-                       class="w-full mb-6 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="password" id="passwordInput" placeholder="Password"
+               autocomplete="current-password"
+               class="w-full mb-6 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                <button type="submit" id="loginBtn"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded transition duration-200 shadow-md">
-                    Secure Login
-                </button>
-            </form>
+        <button onclick="attemptLogin()"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded transition duration-200 shadow-md">
+            Secure Login
+        </button>
 
-            <p id="loginError" class="text-red-500 mt-4 text-center hidden text-sm font-semibold">
-                Invalid username or password.
+        <p id="loginError" class="text-red-500 mt-4 text-center hidden text-sm font-semibold">
+            Invalid username or password.
+        </p>
+
+        <!-- Demo Login Credentials -->
+        <div class="mt-6 p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-lg">
+            <h3 class="text-sm font-bold text-blue-700 dark:text-blue-300 mb-2 text-center">
+                Demo Login Credentials
+            </h3>
+            <p class="text-sm text-gray-700 dark:text-gray-200">
+                <strong>Username:</strong> demo
             </p>
-
-            <!-- Demo Login Credentials Box -->
-            <div class="mt-6 p-4 bg-blue-50 dark:bg-gray-700/60 border border-blue-200 dark:border-gray-600 rounded-lg">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">
-                        Demo Login Credentials
-                    </h3>
-                    <button type="button" onclick="fillDemoCredentials()"
-                            class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2.5 py-1 rounded transition">
-                        Auto-Fill
-                    </button>
-                </div>
-                <p class="text-sm text-gray-700 dark:text-gray-200">
-                    <strong>Username:</strong> <span class="font-mono">demo</span>
-                </p>
-                <p class="text-sm text-gray-700 dark:text-gray-200 mt-1">
-                    <strong>Password:</strong> <span class="font-mono">adminpass123</span>
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                    Public demo account – read-only inventory &amp; expenses.
-                </p>
-            </div>
+            <p class="text-sm text-gray-700 dark:text-gray-200 mt-1">
+                <strong>Password:</strong> adminpass123
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-300 mt-2 text-center">
+                Public demo account – limited access.
+            </p>
         </div>
     </div>
+</div>
 
-    <!-- ========================================== -->
-    <!-- 2. EDIT PRODUCT MODAL (ADMIN ONLY)         -->
-    <!-- ========================================== -->
-    <div id="editProductModal" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden flex items-center justify-center p-4">
+    <!-- EDIT PRODUCT MODAL (ADMIN ONLY) -->
+    <div id="editProductModal" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden flex items-center justify-center">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl w-96 border border-gray-200 dark:border-gray-700">
             <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Edit / Restock Product</h3>
             <input type="hidden" id="editProductId">
-            
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Product Name</label>
-            <input type="text" id="editProductName" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Cost Price (₹)</label>
-            <input type="number" step="0.01" id="editProductCost" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Selling Price (₹)</label>
-            <input type="number" step="0.01" id="editProductPrice" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Current Stock Quantity</label>
-            <input type="number" step="0.01" id="editProductQty" class="w-full mb-5 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-
+            <input type="text" id="editProductName" placeholder="Product Name" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+            <input type="number" step="0.01" id="editProductCost" placeholder="Cost Price (₹)" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+            <input type="number" step="0.01" id="editProductPrice" placeholder="Selling Price (₹)" class="w-full mb-3 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+            <input type="number" step="0.01" id="editProductQty" placeholder="Stock Quantity" class="w-full mb-5 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
             <div class="flex justify-end gap-3">
-                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded font-semibold hover:opacity-80">Cancel</button>
-                <button onclick="saveProductEdit()" class="px-4 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700">Update Product</button>
+                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded font-semibold">Cancel</button>
+                <button onclick="saveProductEdit()" class="px-4 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700">Update</button>
             </div>
         </div>
     </div>
 
+
     <!-- ========================================== -->
-    <!-- 3. MAIN DASHBOARD LAYOUT                   -->
+    <!-- 2. MAIN DASHBOARD LAYOUT                   -->
     <!-- ========================================== -->
     <div class="flex h-screen overflow-hidden hidden" id="mainDashboard">
         
@@ -106,10 +89,7 @@
             <div class="p-6 border-b border-gray-800 flex justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold tracking-wider text-blue-400">KA Solutions</h1>
-                    <div class="mt-2 flex items-center gap-2">
-                        <span class="text-xs text-gray-400">Role:</span>
-                        <span id="userRoleDisplay" class="text-xs font-bold px-2 py-0.5 rounded bg-blue-600 text-white"></span>
-                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Role: <span id="userRoleDisplay" class="font-semibold text-white"></span></p>
                 </div>
             </div>
             
@@ -124,7 +104,7 @@
                 <button onclick="switchTab('posTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">🛒 Point of Sale</button>
                 <button onclick="switchTab('stockTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📦 Inventory</button>
                 <button onclick="switchTab('ordersTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">🧾 Order History</button>
-                <button onclick="switchTab('insightsTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📈 Insights &amp; Profit</button>
+                <button onclick="switchTab('insightsTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">📈 Insights & Profit</button>
                 <button onclick="switchTab('expensesTab')" class="w-full text-left p-3 rounded hover:bg-gray-800 transition">💸 Expenses</button>
             </nav>
             <div class="p-4 border-t border-gray-800">
@@ -138,11 +118,11 @@
             <!-- POS TAB -->
             <div id="posTab" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Point of Sale</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                         <div class="flex gap-4 mb-4">
                             <select id="posProductSelect" class="flex-1 p-3 border dark:border-gray-600 rounded bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"></select>
-                            <input type="number" id="posQuantity" value="1" min="0.1" step="any" class="w-24 p-3 border dark:border-gray-600 rounded text-center dark:bg-gray-700 dark:text-white">
+                            <input type="number" id="posQuantity" value="1" min="1" class="w-24 p-3 border dark:border-gray-600 rounded text-center dark:bg-gray-700 dark:text-white">
                             <button onclick="addToCart()" class="bg-green-600 text-white px-6 font-bold rounded hover:bg-green-700 transition">Add</button>
                         </div>
                         <table class="w-full text-left border-collapse">
@@ -172,29 +152,21 @@
 
             <!-- STOCK/INVENTORY TAB -->
             <div id="stockTab" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Inventory Management</h2>
-                    <span id="readOnlyStockBadge" class="hidden text-xs font-bold px-3 py-1 rounded bg-yellow-500 text-black">Read-Only Demo Mode</span>
-                </div>
-
-                <!-- Admin Add Product Box -->
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Inventory Management</h2>
                 <div id="adminAddProductBox" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 mb-6">
-                    <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">Add / Receive New Product</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-                        <input type="text" id="newProductName" placeholder="Product Name" class="md:col-span-2 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                    <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">Receive New Stock</h3>
+                    <div class="flex gap-4">
+                        <input type="text" id="newProductName" placeholder="Product Name" class="flex-1 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
                         <select id="newProductUom" class="p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
                             <option value="1">Each</option>
                             <option value="2">Kg</option>
                         </select>
-                        <input type="number" step="0.01" id="newProductCost" placeholder="Cost Price (₹)" class="p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                        <input type="number" step="0.01" id="newProductPrice" placeholder="Selling Price (₹)" class="p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                        <div class="flex gap-2">
-                            <input type="number" step="0.01" id="newProductQty" placeholder="Qty" class="w-full p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                            <button onclick="insertProduct()" class="bg-blue-600 text-white px-4 font-bold rounded hover:bg-blue-700 transition">Save</button>
-                        </div>
+                        <input type="number" id="newProductCost" placeholder="Cost Price (₹)" class="w-32 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                        <input type="number" id="newProductPrice" placeholder="Selling Price (₹)" class="w-32 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                        <input type="number" id="newProductQty" placeholder="Initial Qty" class="w-32 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                        <button onclick="insertProduct()" class="bg-blue-600 text-white px-6 font-bold rounded hover:bg-blue-700 transition">Save</button>
                     </div>
                 </div>
-
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <table class="w-full text-left">
                         <thead class="bg-gray-800 text-white">
@@ -202,9 +174,8 @@
                                 <th class="p-4">Name</th>
                                 <th class="p-4">Cost Price</th>
                                 <th class="p-4">Selling Price</th>
-                                <th class="p-4">Margin</th>
                                 <th class="p-4">Stock Qty</th>
-                                <th class="p-4 text-center admin-only-col">Admin Actions</th>
+                                <th class="p-4 text-center admin-only-col">Action</th>
                             </tr>
                         </thead>
                         <tbody id="productsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
@@ -220,7 +191,7 @@
                         <thead class="bg-gray-800 text-white">
                             <tr>
                                 <th class="p-4">Order ID</th>
-                                <th class="p-4">Date &amp; Time</th>
+                                <th class="p-4">Date & Time</th>
                                 <th class="p-4">Customer</th>
                                 <th class="p-4">Total Amount</th>
                             </tr>
@@ -235,7 +206,7 @@
                 <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Business Insights</h2>
                 
                 <!-- 4-Step Profit Breakdown -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="grid grid-cols-4 gap-4 mb-8">
                     <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md border-t-4 border-blue-500 border border-gray-200 dark:border-gray-700">
                         <p class="text-gray-500 dark:text-gray-400 font-bold text-xs uppercase tracking-wider">Total Sales</p>
                         <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 mt-1">₹<span id="kpiRevenue">0.00</span></h3>
@@ -257,7 +228,7 @@
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
                     <!-- Daily Bar Chart -->
                     <div class="xl:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">7-Day Profit &amp; Cost Trend</h3>
+                        <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">7-Day Profit & Cost Trend</h3>
                         <div class="relative h-64">
                             <canvas id="profitChart"></canvas>
                         </div>
@@ -277,10 +248,10 @@
             <div id="expensesTab" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Expenses Management</h2>
                 
-                <!-- Log Expense Form (Admin Only) -->
+                <!-- Log Expense Form -->
                 <div id="adminAddExpenseBox" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 mb-8">
                     <h3 class="font-bold mb-4 text-gray-700 dark:text-gray-200">Log Additional Expense</h3>
-                    <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex gap-4">
                         <input type="date" id="expenseDate" class="p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white" required>
                         <input type="text" id="expenseCategory" list="expenseOptions" placeholder="Category (e.g. Rent, Salary, Electricity)" class="flex-1 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
                         <datalist id="expenseOptions">
@@ -292,8 +263,8 @@
                             <option value="Packaging">
                             <option value="Transport">
                         </datalist>
-                        <input type="number" step="0.01" id="expenseAmount" placeholder="Amount (₹)" class="w-full md:w-36 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                        <button onclick="submitExpense()" class="bg-red-600 text-white px-6 py-2 font-bold rounded hover:bg-red-700 transition">Log Expense</button>
+                        <input type="number" id="expenseAmount" placeholder="Amount (₹)" class="w-36 p-2 border dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
+                        <button onclick="submitExpense()" class="bg-red-600 text-white px-6 font-bold rounded hover:bg-red-700 transition">Log Expense</button>
                     </div>
                 </div>
 
@@ -321,14 +292,14 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 4. JAVASCRIPT LOGIC                        -->
+    <!-- 3. JAVASCRIPT LOGIC                        -->
     <!-- ========================================== -->
     <script>
         const API_URL = "https://kasolutions-erp.onrender.com";
         let currentProducts = [];
         let cart = [];
         let chartInstance = null;
-        let pieChartInstance = null;
+        let pieChartInstance = null; 
 
         function isAdmin() {
             return (localStorage.getItem('user_role') || '').toLowerCase() === 'admin';
@@ -336,16 +307,8 @@
 
         function applyRolePermissions() {
             const admin = isAdmin();
-            const roleBadge = document.getElementById('userRoleDisplay');
-            roleBadge.innerText = (localStorage.getItem('user_role') || 'USER').toUpperCase();
-            roleBadge.className = admin 
-                ? "text-xs font-bold px-2 py-0.5 rounded bg-green-600 text-white"
-                : "text-xs font-bold px-2 py-0.5 rounded bg-yellow-500 text-black";
-
             document.getElementById('adminAddProductBox').style.display = admin ? 'block' : 'none';
             document.getElementById('adminAddExpenseBox').style.display = admin ? 'block' : 'none';
-            document.getElementById('readOnlyStockBadge').style.display = admin ? 'none' : 'inline-block';
-
             document.querySelectorAll('.admin-only-col').forEach(el => {
                 el.style.display = admin ? 'table-cell' : 'none';
             });
@@ -369,7 +332,7 @@
             localStorage.setItem('ka_theme', isDark ? 'dark' : 'light');
             document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
             document.getElementById('themeText').innerText = isDark ? 'Light Mode' : 'Dark Mode';
-            if (chartInstance || pieChartInstance) loadAnalytics();
+            if (chartInstance || pieChartInstance) loadAnalytics(); 
         }
 
         window.onload = function() {
@@ -378,22 +341,15 @@
             if (token) {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('mainDashboard').style.display = 'flex';
+                document.getElementById('userRoleDisplay').innerText = (localStorage.getItem('user_role') || '').toUpperCase();
                 applyRolePermissions();
                 switchTab('posTab');
             }
         };
 
-        function fillDemoCredentials() {
-            document.getElementById('usernameInput').value = 'demo';
-            document.getElementById('passwordInput').value = 'adminpass123';
-        }
-
         function attemptLogin() {
-            const user = document.getElementById('usernameInput').value.trim();
+            const user = document.getElementById('usernameInput').value;
             const pass = document.getElementById('passwordInput').value;
-            const btn = document.getElementById('loginBtn');
-            btn.innerText = "Authenticating...";
-            btn.disabled = true;
 
             fetch(`${API_URL}/login`, {
                 method: 'POST',
@@ -402,26 +358,19 @@
             })
             .then(res => res.json())
             .then(data => {
-                btn.innerText = "Secure Login";
-                btn.disabled = false;
                 if (data.token) {
                     localStorage.setItem('jwt_token', data.token);
                     localStorage.setItem('user_role', data.role);
-                    document.getElementById('loginError').style.display = 'none';
                     document.getElementById('loginOverlay').style.display = 'none';
                     document.getElementById('mainDashboard').style.display = 'flex';
+                    document.getElementById('userRoleDisplay').innerText = data.role.toUpperCase();
                     applyRolePermissions();
                     switchTab('posTab');
                 } else {
                     document.getElementById('loginError').style.display = 'block';
                 }
             })
-            .catch(err => {
-                btn.innerText = "Secure Login";
-                btn.disabled = false;
-                console.error(err);
-                alert("Server connection failed. Backend may be waking up.");
-            });
+            .catch(err => console.error(err));
         }
 
         function logout() {
@@ -441,16 +390,16 @@
 
         function handleApiError(response) {
             if (!response.ok) {
-                return response.json().then(errData => {
-                    if (response.status === 401 || response.status === 422) {
-                        const msg = errData.msg || errData.error || "Session expired";
-                        alert("Security alert: " + msg + ".\nLogging you out.");
-                        logout();
-                    }
-                    throw errData;
-                }).catch(err => {
-                    throw err;
-                });
+                 return response.json().then(errData => { 
+                     if (response.status === 401 || response.status === 422) {
+                         const msg = errData.msg || errData.error || "Session expired";
+                         alert("Security alert: " + msg + ".\nLogging you out for protection.");
+                         logout();
+                     }
+                     throw errData; 
+                 }).catch(err => {
+                     throw err;
+                 });
             }
             return response.json();
         }
@@ -471,7 +420,10 @@
             })
             .then(handleApiError)
             .then(data => {
-                if (!Array.isArray(data)) throw new Error("Invalid products response");
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid products response");
+                }
+
                 currentProducts = data;
                 const admin = isAdmin();
 
@@ -482,26 +434,18 @@
                 stockTable.innerHTML = '';
 
                 data.forEach(p => {
-                    const cost = parseFloat(p.cost_per_unit);
-                    const price = parseFloat(p.price_per_unit);
-                    const margin = price > 0 ? (((price - cost) / price) * 100).toFixed(1) : '0.0';
-                    const lowStockClass = parseFloat(p.stock_quantity) <= 5 ? 'text-red-500 font-bold' : '';
+                    posSelect.innerHTML += `
+                        <option value="${p.product_id}"
+                            data-price="${p.price_per_unit}"
+                            data-name="${p.name}">
+                            ${p.name} (₹${p.price_per_unit}) - Stock: ${p.stock_quantity}
+                        </option>`;
 
-                    if (parseFloat(p.stock_quantity) > 0) {
-                        posSelect.innerHTML += `
-                            <option value="${p.product_id}"
-                                data-price="${price}"
-                                data-stock="${p.stock_quantity}"
-                                data-name="${p.name}">
-                                ${p.name} (₹${price.toFixed(2)}) - Stock: ${p.stock_quantity}
-                            </option>`;
-                    }
-
-                    const adminActionsHtml = admin ? `
+                    const actionHtml = admin ? `
                         <td class="p-4 text-center space-x-3">
                             <button onclick="openEditModal(${p.product_id})"
                                 class="text-blue-500 font-bold hover:text-blue-700">
-                                Edit / Restock
+                                Edit
                             </button>
                             <button onclick="deleteProduct(${p.product_id})"
                                 class="text-red-500 font-bold hover:text-red-700">
@@ -512,29 +456,27 @@
                     stockTable.innerHTML += `
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition">
                             <td class="p-4 font-semibold">${p.name}</td>
-                            <td class="p-4">₹${cost.toFixed(2)}</td>
-                            <td class="p-4 text-green-600 font-bold">₹${price.toFixed(2)}</td>
-                            <td class="p-4 text-xs text-gray-500">${margin}%</td>
-                            <td class="p-4 ${lowStockClass}">${p.stock_quantity} ${p.uom_name}</td>
-                            ${adminActionsHtml}
+                            <td class="p-4">₹${parseFloat(p.cost_per_unit).toFixed(2)}</td>
+                            <td class="p-4 text-green-600 font-bold">₹${parseFloat(p.price_per_unit).toFixed(2)}</td>
+                            <td class="p-4">${p.stock_quantity} ${p.uom_name}</td>
+                            ${actionHtml}
                         </tr>`;
                 });
             })
             .catch(err => {
                 console.error("Error loading products:", err);
+                alert("Unable to load products. Please check your login session.");
             });
         }
 
-        function openEditModal(productId) {
-            const product = currentProducts.find(p => p.product_id == productId);
-            if (!product) return;
-
-            document.getElementById('editProductId').value = product.product_id;
-            document.getElementById('editProductName').value = product.name;
-            document.getElementById('editProductCost').value = product.cost_per_unit;
-            document.getElementById('editProductPrice').value = product.price_per_unit;
-            document.getElementById('editProductQty').value = product.stock_quantity;
-
+        function openEditModal(id) {
+            const p = currentProducts.find(item => item.product_id == id);
+            if (!p) return;
+            document.getElementById('editProductId').value = p.product_id;
+            document.getElementById('editProductName').value = p.name;
+            document.getElementById('editProductCost').value = p.cost_per_unit;
+            document.getElementById('editProductPrice').value = p.price_per_unit;
+            document.getElementById('editProductQty').value = p.stock_quantity;
             document.getElementById('editProductModal').classList.remove('hidden');
         }
 
@@ -543,16 +485,15 @@
         }
 
         function saveProductEdit() {
-            const payload = {
+            const data = {
                 product_id: document.getElementById('editProductId').value,
                 product_name: document.getElementById('editProductName').value,
-                cost_per_unit: parseFloat(document.getElementById('editProductCost').value),
-                price_per_unit: parseFloat(document.getElementById('editProductPrice').value),
-                stock_quantity: parseFloat(document.getElementById('editProductQty').value)
+                cost_per_unit: document.getElementById('editProductCost').value,
+                price_per_unit: document.getElementById('editProductPrice').value,
+                stock_quantity: document.getElementById('editProductQty').value
             };
-
             const formData = new FormData();
-            formData.append('data', JSON.stringify(payload));
+            formData.append('data', JSON.stringify(data));
 
             fetch(`${API_URL}/updateProduct`, {
                 method: 'POST',
@@ -565,7 +506,7 @@
                 loadProducts();
             })
             .catch(err => {
-                alert("Update failed: " + (err.error || err.msg || "Ensure /updateProduct exists on backend."));
+                alert("Failed to update product: " + (err.error || err.msg || "Check backend."));
             });
         }
 
@@ -582,26 +523,19 @@
             .then(handleApiError)
             .then(() => loadProducts())
             .catch(err => {
-                const errorMsg = err.error || err.msg || "Unauthorized or server error.";
+                console.error("Error deleting:", err);
+                const errorMsg = err.error || err.msg || "Check backend terminal.";
                 alert("Failed to delete product: " + errorMsg);
             });
         }
 
         function insertProduct() {
-            const name = document.getElementById('newProductName').value.trim();
-            const cost = document.getElementById('newProductCost').value;
-            const price = document.getElementById('newProductPrice').value;
-
-            if (!name || !cost || !price) {
-                return alert("Product Name, Cost Price, and Selling Price are required.");
-            }
-
             const data = {
-                product_name: name,
+                product_name: document.getElementById('newProductName').value,
                 uom_id: document.getElementById('newProductUom').value,
-                cost_per_unit: parseFloat(cost),
-                price_per_unit: parseFloat(price),
-                stock_quantity: parseFloat(document.getElementById('newProductQty').value) || 0
+                cost_per_unit: document.getElementById('newProductCost').value,
+                price_per_unit: document.getElementById('newProductPrice').value,
+                stock_quantity: document.getElementById('newProductQty').value || 0
             };
 
             const formData = new FormData();
@@ -613,16 +547,19 @@
                 body: formData
             })
             .then(handleApiError)
-            .then(() => {
+            .then(result => {
                 alert("Product added successfully!");
+
                 document.getElementById('newProductName').value = '';
                 document.getElementById('newProductCost').value = '';
                 document.getElementById('newProductPrice').value = '';
                 document.getElementById('newProductQty').value = '';
+
                 loadProducts();
             })
             .catch(err => {
-                alert("Failed to add product: " + (err.error || err.msg || "Admin privileges required."));
+                console.error("Error adding product:", err);
+                alert("Failed to add product: " + (err.error || err.msg || err.message || "Unknown error"));
             });
         }
 
@@ -635,24 +572,9 @@
             const id = option.value;
             const name = option.getAttribute('data-name');
             const price = parseFloat(option.getAttribute('data-price'));
-            const maxStock = parseFloat(option.getAttribute('data-stock'));
             const qty = parseFloat(qtyInput.value);
 
-            if (qty <= 0 || qty > maxStock) {
-                return alert(`Invalid quantity. Available stock: ${maxStock}`);
-            }
-
-            const existing = cart.find(item => item.product_id === id);
-            if (existing) {
-                if (existing.quantity + qty > maxStock) {
-                    return alert(`Total exceeds available stock (${maxStock}).`);
-                }
-                existing.quantity += qty;
-                existing.total_price = existing.quantity * price;
-            } else {
-                cart.push({ product_id: id, name: name, quantity: qty, total_price: price * qty });
-            }
-
+            cart.push({ product_id: id, name: name, quantity: qty, total_price: price * qty });
             renderCart();
             select.selectedIndex = 0;
             qtyInput.value = 1;
@@ -706,18 +628,18 @@
             })
             .then(handleApiError)
             .then(data => {
-                if (data.status === 'success' || data.order_id) {
+                if (data.status === 'success') {
                     alert('Order processed successfully!');
                     cart = [];
                     renderCart();
                     document.getElementById('customerName').value = '';
                     loadProducts();
                 } else {
-                    alert('Error: ' + (data.error || 'Checkout failed'));
+                    alert('Error: ' + data.error);
                 }
             })
             .catch(err => {
-                alert('Checkout error: ' + (err.error || err.msg || 'Server error'));
+                alert('Error: ' + (err.error || err.msg || 'Checkout failed'));
             });
         }
 
@@ -727,7 +649,10 @@
             })
             .then(handleApiError)
             .then(data => {
-                if (!Array.isArray(data)) throw new Error("Invalid orders response");
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid orders response");
+                }
+
                 const tbody = document.getElementById('ordersTableBody');
                 tbody.innerHTML = '';
 
@@ -743,7 +668,9 @@
                         </tr>`;
                 });
             })
-            .catch(err => console.error("Error loading orders:", err));
+            .catch(err => {
+                console.error("Error loading orders:", err);
+            });
         }
 
         function submitExpense() {
@@ -759,7 +686,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...getAuthHeaders()
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
                 },
                 body: JSON.stringify({ date: date, category: category, amount: parseFloat(amount) })
             })
@@ -772,13 +699,15 @@
                 loadExpensesTable();
             })
             .catch(err => {
-                const errorMsg = err.error || err.msg || "Admin privileges required.";
+                console.error("Error logging expense:", err);
+                const errorMsg = err.error || err.msg || "Unknown Server Error";
                 alert("Failed to submit expense: " + errorMsg);
             });
         }
 
         function deleteExpense(id) {
             if (!confirm("Are you sure you want to delete this expense?")) return;
+            
             const formData = new FormData();
             formData.append('expense_id', id);
 
@@ -788,9 +717,12 @@
                 body: formData
             })
             .then(handleApiError)
-            .then(() => loadExpensesTable())
+            .then(() => {
+                loadExpensesTable();
+            })
             .catch(err => {
-                const errorMsg = err.error || err.msg || "Admin privileges required.";
+                console.error("Error deleting expense:", err);
+                const errorMsg = err.error || err.msg || "Check backend terminal.";
                 alert("Failed to delete expense: " + errorMsg);
             });
         }
@@ -809,7 +741,7 @@
                     return;
                 }
                 data.forEach(e => {
-                    const actionCell = admin ? `
+                    const actionHtml = admin ? `
                         <td class="p-4 text-center">
                             <button onclick="deleteExpense(${e.expense_id})" class="text-red-500 font-bold hover:text-red-700">Delete</button>
                         </td>` : '';
@@ -820,12 +752,13 @@
                             <td class="p-4">${e.expense_date}</td>
                             <td class="p-4 font-medium">${e.expense_category}</td>
                             <td class="p-4 font-bold text-red-500">₹${parseFloat(e.amount).toFixed(2)}</td>
-                            ${actionCell}
+                            ${actionHtml}
                         </tr>
                     `;
                 });
             })
             .catch(err => {
+                console.error("Error loading expenses:", err);
                 const tbody = document.getElementById('expensesTableBody');
                 const errorMsg = err.error || err.msg || "Could not load table";
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500 font-bold">Error: ${errorMsg}</td></tr>`;
@@ -838,94 +771,118 @@
             const textColor = isDark ? '#cbd5e1' : '#475569';
 
             fetch(`${API_URL}/getAnalytics`, {
-                headers: getAuthHeaders()
-            })
-            .then(handleApiError)
-            .then(data => {
-                if (data.kpis) {
-                    document.getElementById('kpiRevenue').innerText = parseFloat(data.kpis.total_revenue).toFixed(2);
-                    document.getElementById('kpiCost').innerText = parseFloat(data.kpis.total_cost).toFixed(2);
-                    document.getElementById('kpiExpenses').innerText = parseFloat(data.kpis.total_expenses).toFixed(2);
-                    document.getElementById('kpiProfit').innerText = parseFloat(data.kpis.net_profit).toFixed(2);
-                    
-                    const ctxPie = document.getElementById('revenuePieChart').getContext('2d');
-                    if (pieChartInstance) pieChartInstance.destroy();
-                    
-                    const visualNetProfit = Math.max(0, parseFloat(data.kpis.net_profit));
+                  headers: getAuthHeaders()
+           })
+                .then(handleApiError)
+                .then(data => {
+                    if (data.kpis) {
+                        document.getElementById('kpiRevenue').innerText = parseFloat(data.kpis.total_revenue).toFixed(2);
+                        document.getElementById('kpiCost').innerText = parseFloat(data.kpis.total_cost).toFixed(2);
+                        document.getElementById('kpiExpenses').innerText = parseFloat(data.kpis.total_expenses).toFixed(2);
+                        document.getElementById('kpiProfit').innerText = parseFloat(data.kpis.net_profit).toFixed(2);
+                        
+                        const ctxPie = document.getElementById('revenuePieChart').getContext('2d');
+                        if (pieChartInstance) pieChartInstance.destroy();
+                        
+                        const visualNetProfit = Math.max(0, parseFloat(data.kpis.net_profit));
 
-                    pieChartInstance = new Chart(ctxPie, {
-                        type: 'pie',
+                        pieChartInstance = new Chart(ctxPie, {
+                            type: 'pie',
+                            data: {
+                                labels: ['Cost of Goods', 'Expenses', 'Net Profit'],
+                                datasets: [{
+                                    data: [
+                                        parseFloat(data.kpis.total_cost),
+                                        parseFloat(data.kpis.total_expenses),
+                                        visualNetProfit
+                                    ],
+                                    backgroundColor: [
+                                        'rgba(249, 115, 22, 0.8)', 
+                                        'rgba(239, 68, 68, 0.8)',  
+                                        'rgba(34, 197, 94, 0.9)'   
+                                    ],
+                                    borderColor: isDark ? '#1f2937' : '#ffffff',
+                                    borderWidth: 2
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: { color: textColor }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+            fetch(`${API_URL}/getDailyProfit`, {
+                 headers: getAuthHeaders()
+            })
+                .then(handleApiError)
+                .then(data => {
+                    const labels = data.map(d => d.order_date).reverse();
+                    const revenueData = data.map(d => d.daily_revenue).reverse();
+                    const costData = data.map(d => d.daily_cost).reverse();
+                    const expenseData = data.map(d => d.daily_expense).reverse();
+                    const netProfitData = data.map(d => d.net_profit).reverse();
+
+                    const ctx = document.getElementById('profitChart').getContext('2d');
+                    if (chartInstance) chartInstance.destroy();
+
+                    chartInstance = new Chart(ctx, {
+                        type: 'bar', 
                         data: {
-                            labels: ['Cost of Goods', 'Expenses', 'Net Profit'],
-                            datasets: [{
-                                data: [
-                                    parseFloat(data.kpis.total_cost),
-                                    parseFloat(data.kpis.total_expenses),
-                                    visualNetProfit
-                                ],
-                                backgroundColor: [
-                                    'rgba(249, 115, 22, 0.8)', 
-                                    'rgba(239, 68, 68, 0.8)',  
-                                    'rgba(34, 197, 94, 0.9)'   
-                                ],
-                                borderColor: isDark ? '#1f2937' : '#ffffff',
-                                borderWidth: 2
-                            }]
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Sales Revenue (₹)',
+                                    data: revenueData,
+                                    backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                                },
+                                {
+                                    label: 'Cost of Goods (₹)',
+                                    data: costData,
+                                    backgroundColor: 'rgba(249, 115, 22, 0.8)'
+                                },
+                                {
+                                    label: 'Expenses (₹)',
+                                    data: expenseData,
+                                    backgroundColor: 'rgba(239, 68, 68, 0.8)'
+                                },
+                                {
+                                    label: 'Net Profit (₹)',
+                                    data: netProfitData,
+                                    backgroundColor: 'rgba(34, 197, 94, 0.9)'
+                                }
+                            ]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: {
                                 legend: {
-                                    position: 'bottom',
+                                    position: 'top',
                                     labels: { color: textColor }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: gridColor },
+                                    ticks: { color: textColor }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: gridColor },
+                                    ticks: { color: textColor }
                                 }
                             }
                         }
                     });
-                }
-            })
-            .catch(err => console.error("Error loading analytics KPIs:", err));
-
-            fetch(`${API_URL}/getDailyProfit`, {
-                headers: getAuthHeaders()
-            })
-            .then(handleApiError)
-            .then(data => {
-                const labels = data.map(d => d.order_date).reverse();
-                const revenueData = data.map(d => d.daily_revenue).reverse();
-                const costData = data.map(d => d.daily_cost).reverse();
-                const expenseData = data.map(d => d.daily_expense).reverse();
-                const netProfitData = data.map(d => d.net_profit).reverse();
-
-                const ctx = document.getElementById('profitChart').getContext('2d');
-                if (chartInstance) chartInstance.destroy();
-
-                chartInstance = new Chart(ctx, {
-                    type: 'bar', 
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'Sales Revenue (₹)', data: revenueData, backgroundColor: 'rgba(59, 130, 246, 0.8)' },
-                            { label: 'Cost of Goods (₹)', data: costData, backgroundColor: 'rgba(249, 115, 22, 0.8)' },
-                            { label: 'Expenses (₹)', data: expenseData, backgroundColor: 'rgba(239, 68, 68, 0.8)' },
-                            { label: 'Net Profit (₹)', data: netProfitData, backgroundColor: 'rgba(34, 197, 94, 0.9)' }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'top', labels: { color: textColor } }
-                        },
-                        scales: {
-                            x: { grid: { color: gridColor }, ticks: { color: textColor } },
-                            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
-                        }
-                    }
                 });
-            })
-            .catch(err => console.error("Error loading daily profit chart:", err));
         }
     </script>
 </body>
